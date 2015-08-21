@@ -1,0 +1,20 @@
+#!/bin/sh
+
+set -e
+
+if [ "$1" = "purge" ]
+then
+  # Remove the symlink
+  if [ -f /usr/share/keyrings/huayra-archive-keyring.gpg.asc ];
+  then
+      rm -f /usr/share/keyrings/huayra-archive-keyring.gpg.asc
+  fi
+
+  if [ -h /usr/share/keyrings/archive.gpg ];
+  then
+      rm -f /usr/share/keyrings/archive.gpg
+  fi
+fi
+
+#DEBHELPER#
+

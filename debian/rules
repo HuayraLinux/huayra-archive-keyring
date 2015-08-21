@@ -1,0 +1,74 @@
+#!/usr/bin/make -f
+# -*- makefile -*-
+# Sample debian/rules that uses debhelper.
+# This file was originally written by Joey Hess and Craig Small.
+# As a special exception, when this file is copied by dh-make into a
+# dh-make output file, you may use that output file without restriction.
+# This special exception was added by Craig Small in version 0.37 of dh-make.
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+install_dir=install -d -m 755
+install_file=install -m 644
+install_script=install -m 755
+install_binary=install -m 755 -s
+
+VERSION := $(shell dpkg-parsechangelog | grep ^Version: | cut -d' ' -f2)
+
+build:
+
+clean:
+	$(checkdir)
+	-rm -f foo foo.asc *.bak *~ */*~ debian/files* debian/*substvars
+	-rm -rf debian/tmp debian/huayra-archive-keyring-udeb
+
+binary-indep: checkroot
+	$(checkdir)
+	-rm -rf debian/tmp
+	$(install_dir) debian/tmp/DEBIAN/
+	$(install_script) debian/postinst debian/tmp/DEBIAN/
+
+	$(install_dir) debian/tmp/usr/share/keyrings/
+	$(install_file) keyrings/huayra-archive-keyring.gpg.asc debian/tmp/usr/share/keyrings/
+	$(install_dir) debian/tmp/usr/share/doc/huayra-archive-keyring/
+	$(install_file) README debian/tmp/usr/share/doc/huayra-archive-keyring/
+	$(install_file) debian/changelog debian/tmp/usr/share/doc/huayra-archive-keyring/changelog
+	gzip -9v debian/tmp/usr/share/doc/huayra-archive-keyring/*
+	$(install_file) debian/copyright debian/tmp/usr/share/doc/huayra-archive-keyring/
+	cd debian/tmp; find -type f \! -regex '.*/DEBIAN/.*' -printf '%P\0' | xargs -r0 md5sum >DEBIAN/md5sums
+
+	dpkg-gencontrol -phuayra-archive-keyring -isp
+	chown -R root.root debian/tmp
+	chmod -R go=rX debian/tmp
+	dpkg --build debian/tmp ..
+
+	-rm -rf debian/huayra-archive-keyring-udeb
+	$(install_dir) debian/huayra-archive-keyring-udeb/DEBIAN/
+
+	$(install_dir) debian/huayra-archive-keyring-udeb/usr/share/keyrings/
+	$(install_file) keyrings/huayra-archive-keyring.gpg.asc debian/huayra-archive-keyring-udeb/usr/share/keyrings/
+	install -m 755 debian/huayra-archive-keyring-udeb.postinst debian/huayra-archive-keyring-udeb/DEBIAN/postinst
+
+	# Don't let dpkg-gencontrol write incorrect guesses to debian/files.
+	# Instead, register the udeb manually.
+	dpkg-gencontrol -nhuayra-archive-keyring-udeb_$(VERSION)_all.udeb -phuayra-archive-keyring-udeb -Tdebian/huayra-archive-keyring-udeb.substvars -Pdebian/huayra-archive-keyring-udeb -isp
+	chown -R root.root debian/huayra-archive-keyring-udeb
+	chmod -R go=rX debian/huayra-archive-keyring-udeb
+	dpkg --build debian/huayra-archive-keyring-udeb ../huayra-archive-keyring-udeb_$(VERSION)_all.udeb
+
+binary-arch:
+
+define checkdir
+	test -f keyrings/huayra-archive-keyring.gpg.asc
+endef
+
+# Below here is fairly generic really
+
+binary:		binary-indep binary-arch
+
+checkroot:
+	$(checkdir)
+	test root = "`whoami`"
+
+.PHONY: binary binary-arch binary-indep clean checkroot build

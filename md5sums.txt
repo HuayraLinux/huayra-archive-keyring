@@ -1,0 +1,12 @@
+-----BEGIN PGP SIGNED MESSAGE-----
+Hash: SHA1
+
+d1df434d26bc96e32aa75fde3b93591b  keyrings/huayra-archive-keyring.gpg.asc
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1.4.12 (GNU/Linux)
+
+iEYEARECAAYFAlCYfMEACgkQaree1sj9+cEPtwCgiCPzipdxDIUsyimwTjDWLhyR
+5N0AoJw+X4Y/vSg3Rqaj7v/5a1pvAAUr
+=Wwap
+-----END PGP SIGNATURE-----
