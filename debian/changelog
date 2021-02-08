@@ -1,3 +1,9 @@
+huayra-archive-keyring (1.8) torbellino; urgency=medium
+
+  * Agrega dependencia a gnpug2
+
+ -- Matias De lellis <mati86dl@gmail.com>  Tue, 02 Feb 2021 11:40:49 -0300
+
 huayra-archive-keyring (1.7) testing; urgency=low
 
   * no olvidar exportar con --armor

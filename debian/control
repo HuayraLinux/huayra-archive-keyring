@@ -12,6 +12,7 @@ Recommends: gpgv
 Description: GnuPG keys of the Huayra archive
  The Huayra project digitally signs its Release files. This package
  contains the archive keys used for that.
+Depends: gnupg
 
 Package: huayra-archive-keyring-udeb
 Priority: optional
